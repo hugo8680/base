@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mt.base.generator.mapper.GeneratorRecordMapper">
+    <select id="selectByName" parameterType="string" resultType="com.mt.base.generator.entity.GenerateRecord">
+        SELECT * FROM `generator_record` WHERE `table_name` = #{tableName};
+    </select>
+    <select id="selectRecords" parameterType="String" resultType="com.mt.base.generator.entity.GenerateRecord">
+        SELECT * FROM `generator_record`
+        <if test="tableName != null and tableName.trim() != ''">
+            WHERE `table_name` LIKE concat('%', #{tableName}, '%')
+        </if>
+        order by `table_name` ASC
+    </select>
+</mapper>

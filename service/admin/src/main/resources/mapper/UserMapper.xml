@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mt.base.service.admin.mapper.UserMapper">
+    <resultMap type="com.mt.base.service.admin.entity.User" id="UserMap">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="email"    column="email"    />
+        <result property="phone"    column="phone"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="gender"    column="gender"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createId"    column="create_id"    />
+        <result property="updateId"    column="update_id"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+    <resultMap type="com.mt.base.service.admin.entity.UserWithRole" id="UserMapWithRole">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="email"    column="email"    />
+        <result property="phone"    column="phone"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="gender"    column="gender"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createId"    column="create_id"    />
+        <result property="updateId"    column="update_id"    />
+        <result property="status"    column="status"    />
+        <collection property="roles" ofType="com.mt.base.service.admin.entity.Role">
+            <id column="role_id" property="id" />
+            <result column="role_name" property="name" />
+            <result column="role_remark" property="remark" />
+            <result column="role_level" property="level" />
+            <result column="role_create_time" property="createTime" />
+            <result column="role_update_time" property="updateTime" />
+            <result column="role_create_id" property="createId" />
+            <result column="role_update_id" property="updateId" />
+            <result column="role_status" property="status" />
+        </collection>
+    </resultMap>
+
+    <select id="selectUserWithRole" parameterType="com.mt.base.service.admin.query.UserQueryParams" resultMap="UserMapWithRole">
+        select u.id id, u.username username, u.password password, u.avatar avatar, u.email email, u.phone phone, u.nickname nickname, u.gender gender, u.create_time create_time, u.update_time update_time, u.create_id create_id, u.update_id update_id, u.status status, r.id role_id, r.name role_name, r.level role_level, r.remark role_remark, r.create_time role_create_time, r.update_time role_update_time, r.create_id role_create_id, r.update_id role_update_id, r.status role_status from auth_user u
+        left join auth_user_role ur on ur.user_id = u.id
+        left join auth_role r on r.id = ur.role_id
+        <where>
+            <if test="username != null and username != ''">
+                and u.username like concat('%', #{username}, '%')
+            </if>
+            <if test="email != null and email !=''">
+                and u.email like concat('%', #{email}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and u.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and u.nickname like concat('%', #{nickname}, '%')
+            </if>
+            <if test="gender != null">
+                and u.gender = #{gender}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and u.create_time = #{createTime}
+            </if>
+            <if test="status != null">
+                and u.status = #{status}
+            </if>
+            <if test="role != null and role != ''">
+                and r.name = #{role}
+            </if>
+            and r.status = 1
+        </where>
+    </select>
+</mapper>

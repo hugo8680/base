@@ -1,0 +1,44 @@
+server:
+  port: 8020
+  http2:
+    enabled: true
+  servlet:
+    context-path: /admin
+  # undertow configuration
+  undertow:
+    accesslog:
+      dir: logs
+      enabled: false
+      pattern: common
+      prefix: auth_access
+      suffix: log
+    max-http-post-size: 10MB
+    io-threads: 4
+    worker-threads: 10
+    buffer-size: 1024
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fin?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: admin123
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: ADMIN-POOL
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.mt.base.service.admin.entity
+
+auth:
+  header: Authorization
+  tokenHeader: 'Bearer '
+  checkTokenUrl: http://localhost:8010/auth/token/checkToken
